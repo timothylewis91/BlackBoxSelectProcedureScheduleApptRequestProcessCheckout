@@ -1,0 +1,926 @@
+
+package unitTests;
+
+import issPageClasses.AppointmentCalendarPage;
+import issPageClasses.ApptRequestPage;
+import issPageClasses.CancelApptPage;
+import issPageClasses.ChangeLocationModalPage;
+import issPageClasses.CheckInApptPage;
+import issPageClasses.CheckOutApptPage;
+import issPageClasses.ClinicStopCodeModalPage;
+import issPageClasses.EditAppointmentPage;
+import issPageClasses.ExpandEntryModalPage;
+import issPageClasses.HeaderModalPage;
+import issPageClasses.HomePage;
+import issPageClasses.MissionActEligibleModalPage;
+import issPageClasses.NewApptPage;
+import issPageClasses.OverbookModalPage;
+import issPageClasses.PatientEligibilityModalPage;
+import issPageClasses.PatientHeaderModalPage;
+import issPageClasses.PatientPage;
+import issPageClasses.PatientRecordFlagsModalPage;
+import issPageClasses.PendingAppointmentsTablePage;
+import issPageClasses.PreviewPatientLetterModalPage;
+import issPageClasses.Resources;
+import issPageClasses.SensitiveRecordModalPage;
+import issPageClasses.SignOnPage;
+import issPageClasses.ViewAppointment;
+import platformIndependentCore.scripts.Arguments;
+import platformIndependentCore.scripts.TestScript;
+import platformIndependentCore.utilities.ConfigProperties;
+
+/**
+ * <b>Name :</b> CreateCancelRescheduleAppt.java
+ * <p>
+ * <b>Generated :</b> Mar 18, 2024
+ * <p>
+ * <b>Description :</b>
+ * <p>
+ *
+ * @since Mar 18, 2024
+ * @author OITSDCLEWIST
+ */
+
+public class BlackBoxSelectProcedureScheduleApptRequestProcessCheckout extends TestScript {
+
+	/** URL for SSOI login for the active test environment */
+	protected static final String BROWSER = ConfigProperties.getValue("BROWSER");
+
+	/**
+	 * Main method
+	 *
+	 * @param args Args
+	 */
+	public static void main(String[] args) {
+		runScript(args);
+	}
+
+	@Override
+	public void testScript(Arguments args) {
+		// TODO ENTER SCRIPT CODE HERE
+
+		// page classes used
+
+		HomePage hp = new HomePage();
+		ChangeLocationModalPage clmp = new ChangeLocationModalPage();
+		PatientHeaderModalPage phmp = new PatientHeaderModalPage();
+		SensitiveRecordModalPage srmp = new SensitiveRecordModalPage();
+		PatientRecordFlagsModalPage prfmp = new PatientRecordFlagsModalPage();
+		PatientEligibilityModalPage pemp = new PatientEligibilityModalPage();
+		PatientPage pp = new PatientPage();
+		HeaderModalPage hmp = new HeaderModalPage();
+		Resources r = new Resources();
+		ApptRequestPage arp = new ApptRequestPage();
+		SignOnPage sp = new SignOnPage();
+		AppointmentCalendarPage acp = new AppointmentCalendarPage();
+		NewApptPage nap = new NewApptPage();
+		PreviewPatientLetterModalPage pplmp = new PreviewPatientLetterModalPage();
+		CancelApptPage cap = new CancelApptPage();
+		ViewAppointment va = new ViewAppointment();
+		ClinicStopCodeModalPage ctcmp = new ClinicStopCodeModalPage();
+		EditAppointmentPage eap = new EditAppointmentPage();
+		ExpandEntryModalPage eemp = new ExpandEntryModalPage();
+		CheckInApptPage ciap = new CheckInApptPage();
+		CheckOutApptPage coap = new CheckOutApptPage();
+		PendingAppointmentsTablePage patp = new PendingAppointmentsTablePage();
+		OverbookModalPage obmp = new OverbookModalPage();
+		MissionActEligibleModalPage maemp = new MissionActEligibleModalPage();
+
+		hp.loadPage();
+
+		sp.clickSignInWithWindowsAuthentication();
+		sleep(10);
+
+		hmp.clickBtnFacilityLocation();
+		sleep(3);
+
+		// Select desire facility
+		clmp.selectFacilityLocationByName("958: 958 Cheyenne VA Medical Center", "958: 958 Cheyenne VA Medical Center");
+		sleep(3);
+
+		// verify you are on the right facility
+		vpEquals("Verify the Location", "958: 958 Cheyenne VA Medical Center", hmp.readBtnLblFacilityLocation());
+
+		// enter search string to cause name page to appear
+		phmp.setSearchPatientInput("TEST,AKASH");
+		sleep(5);
+
+		phmp.selectPatientByName("TEST,AKASH");
+		sleep(5);
+
+		if (pemp.isPatientEligibilityFormDisplayed()) {
+			// System.out.println("Click Continue");
+
+			// click "Acknowledge Eligibility" button for patient record flag
+			pemp.clickBtnPatientEligibilityAcknowledge();
+		}
+
+		if (srmp.isSensitiveRecordFormDisplayed()) {
+			// System.out.println("Click Continue");
+			srmp.clickBtnSensitiveRecordContinue();
+		}
+
+		if (prfmp.isPatientRecordFlagsFormDisplayed()) {
+			// System.out.println("Click Continue");
+			prfmp.clickBtnPatientRecordFlagsContinue();
+		}
+
+		// Collapse the Patient header
+		if (phmp.readBtnLblCollapseExpandPatientHeader().equals("Collapse")) {
+
+			// click the Collapse Expand Patient Header button
+			phmp.clickBtnCollapseExpandPatientHeader();
+			sleep(3);
+		}
+
+		// Click on Patient Tab
+		sleep(5);
+		// click on the Patient button
+
+		hmp.clickBtnPatient();
+
+		// Verify the Appointment Requests table is loaded
+		vpEquals("Verify the Appointment Requests table is loaded", true, pp.isAppointmentRequestsTablePresent());
+
+		pp.clickBtnAppointmentRequestsNewRequest();
+		pp.clickBtnAppointmentRequestsNewRequestAppt();
+		sleep(5);
+
+		// Verify the Patient Eligibility label displays on Appointment Request
+		// Page
+		vpEquals("Patient Eligibility label is displayed on Appointment Request Page", "Patient Eligibility",
+				arp.readLblPatientEligibility());
+
+		// Verify the Patient SC Percent label displays on Appointment Request
+		// Page
+		vpEquals("Patient SC Percent label is displayed on Appointment Request Page", "SC Percent:",
+				arp.readLblPatientSCPercent());
+
+		// Verify the Patient Primary Eligibility label displays on Appointment
+		// Request Page
+		vpEquals("Patient Primary Eligibility label is displayed on Appointment Request Page", "Primary Code:",
+				arp.readLblPatientPrimaryEligibility());
+
+		// Verify New Appointment Request text on Appointment Request Page
+		vpEquals("New Appointment Request text is displayed on Appointment Request Page", "New Appointment Request",
+				arp.readLblNewAppointment());
+
+		// Verify Label "Appointment For" text
+		vpEquals("Appointment For text is displayed on Appointment Request Page", "Appointment For (*Required)",
+				arp.readLblAppointmentFor());
+
+		// Verify and Click the Service Radio Button
+		arp.clickBtnService();
+
+		// Verify and Click the Clinic Radio Button
+		arp.clickBtnClinic();
+
+		arp.setSearchClinicInput("AUTO BLACKBOX COUNT");
+		sleep(5);
+
+		// select the clinic by name
+		arp.selectClinicByName("AUTO BLACKBOX COUNT");
+		sleep(5);
+
+		// Verify the clinic was selected
+		vpEquals("Verify the clinic was selected", "AUTO BLACKBOX COUNT", arp.readDdlClinicSearchSelected());
+		sleep(5);
+
+		// Verify Label "Appointment Type" text
+		vpEquals("Appointment Type text is displayed on Appointment Request Page", "Appointment Type (*Required)",
+				arp.readLblAppointmentType());
+
+		// Verify Label "Requested By" text
+		vpEquals("Requested By text is displayed on Appointment Request Page", "Requested By (*Required)",
+				arp.readLblRequestedBy());
+
+		// Verify and Click the Provider Radio Button
+		arp.clickBtnProvider();
+
+		// Verify and Click the Patient Radio Button
+		arp.clickBtnPatient();
+
+		// Verify Comment Label
+		vpEquals("Comments is displayed", "Comments", arp.readLblComments());
+
+		// Type Comment
+		arp.setComments("BLACKBOX TESTING");
+
+		// Verify typed Comments
+		vpEquals("Comments is displayed", "BLACKBOX TESTING", arp.readComments());
+
+		// Verify the Create Request Button
+		vpEquals("The Create Request is diplayed and clickable", false, arp.isBtnCreateRequestEnabled());
+
+		if (arp.isBtnCreateRequestEnabled()) {
+			arp.clickBtnCreateRequest();
+		} else {
+			arp.clickBtnCancel();
+		}
+		sleep(2);
+
+		// clicking on the action option from the comment section
+		pp.clickAppointmentRequestsColumnHeaderActionsMenu("REQUEST");
+
+		// Click from Request Column Select Filter by Request
+		pp.clickLstAppointmentRequestsHeaderActionMenuItem("Filter by REQUEST");
+
+		String filter = r.getFilterType("REQUEST");
+
+		// sending data from CSV file
+		pp.setAppointmentRequestsColumnHeaderFilterInput("REQUEST", filter, "Procedure");
+
+		// sleep statement
+		sleep(3);
+		// Press escape key
+		r.pressEscapeKey();
+		sleep(3);
+		pp.clickAppointmentRequestsActionsRowWithColumnValue("Procedure");
+		sleep(5);
+
+		pp.clickLstAppointmentRequestsActionsMenuItem("Appointment", "New");
+		sleep(10);
+
+		acp.setSearchClinicInput("AUTO BLACKBOX COUNT");
+		sleep(3);
+
+		acp.selectClinicByName("AUTO BLACKBOX COUNT");
+		sleep(10);
+		sleep(5);
+		String tsDateBegin = "tomorrow";
+		String tsStartTimeBegin = "08:00 AM";
+
+		if (tsDateBegin.equalsIgnoreCase("tomorrow")) {
+			tsDateBegin = r.readCurrentDate("M/d/yyyy");
+			System.out.println(tsDateBegin);
+		}
+		r.scrollIntoView(acp.selectTimeSlotBySeparateDateTime(tsDateBegin, tsStartTimeBegin));
+
+		r.clickBtnRightMouseContext(acp.selectScheduleDateTimeSlotCount(tsDateBegin, tsStartTimeBegin));
+		sleep(5);
+
+		acp.clickSlotPopupScheduleAppointmentMenuItem("Create Appointment");
+		sleep(5);
+
+		ctcmp.clickBtnLblBtnClinicStopModalYes();
+		sleep(5);
+		maemp.clickBtnClose();
+		nap.selectBenefitEligibility("SHARING AGREEMENT");
+		sleep(5);
+
+		sleep(3);
+		nap.clickBtnCreateAppointment();
+		sleep(10);
+		pplmp.clickBtnPreviewPatientLetterCancelIcon();
+		sleep(5);
+
+		hmp.clickBtnHome();
+		sleep(3);
+
+		hp.clickTabClinic();
+		sleep(3);
+
+		hp.setSearchClinicInput("AUTO BLACKBOX COUNT");
+		sleep(3);
+		hp.selectClinicByName("AUTO BLACKBOX COUNT");
+		sleep(10);
+
+		r.scrollIntoView(acp.selectTimeSlotBySeparateDateTime(tsDateBegin, tsStartTimeBegin));
+		sleep(5);
+
+		r.clickBtnRightMouseContext(acp.selectTimeSlotBySeparateDateTime(tsDateBegin, tsStartTimeBegin));
+		sleep(5);
+
+		// Verify Appointment Slot Color
+		vpEquals("Verify Appointment Slot Color", "New", acp.readToolTipSlotAppointmentStatus());
+
+		// Verify Edit Label is displayed
+		vpEquals("Edit Label is displayed", "Edit", acp.readLblEdit());
+		sleep(2);
+		// Verify View View is displayed
+		vpEquals("View Label is displayed", "View", acp.readLblView());
+		sleep(2);
+
+		// Verify Cancel Label is displayed
+		vpEquals("Cancel Label is displayed", "Cancel", acp.readLblCancel());
+		sleep(2);
+		// Verify Block and Move Label is displayed
+		vpEquals("Block and Move Label is displayed", "Block and Move", acp.readLblBlockAndMove());
+		sleep(2);
+		// Verify Check In Patient Label is displayed
+		vpEquals("Check In Patient Label is displayed", "Check In Patient", acp.readLblCheckInPatient());
+		sleep(2);
+
+		// Verify Mark as No Show Label is displayed
+		vpEquals("Mark as No Show Label is displayed", "Mark as No Show", acp.readLblMarkNoShow());
+		sleep(2);
+
+		// Verify Expand Entry is displayed
+		vpEquals("Expand Entry Label is displayed", "Expand Entry", acp.readLblExpandEntry());
+		sleep(3);
+
+		acp.clickSlotPopupScheduleAppointmentMenuItem("View");
+		sleep(5);
+
+		// verify page title
+		vpEquals("Verify page title", "View Appointment", va.readLblViewAppointment());
+
+		// verify clinic label and value
+		vpEquals("Verify label Clinic", "Clinic", va.readLblClinic());
+		vpEquals("Verify Clinic name is displayed", "AUTO BLACKBOX COUNT", va.readClinic());
+
+		// verify clinic timezone label and value
+		vpEquals("Verify label Clinic Timezone", "Clinic Timezone", va.readLblClinicTimezone());
+		vpEquals("Verify Clinic Timezone is displayed.", "MOUNTAIN", va.readClinicTimezone());
+
+		// verify appointment type label and value
+		vpEquals("Verify label Appointment Type is displayed", "Appointment Type", va.readLblAppointmentType());
+		vpEquals("Verify Appointment Type is displayed", "SHARING AGREEMENT", va.readAppointmentType());
+
+		// verify Notes label and value
+		vpEquals("Verify label Notes is displayed", "Notes", va.readLblNotes());
+
+		// verify GAF label and value
+		vpEquals("Verify label GAF is displayed ", "GAF", va.readLblGAF());
+		vpEquals("Verify GAF is displayed ", "New GAF Required", va.readGAF());
+
+		// verify Benefit/Eligibility label and value
+		vpEquals("Verify label Benefit/Eligibility", "Benefit/Eligibility", va.readLblBenefit_Eligibility());
+		vpEquals("Verify label Benefit/Eligibility", "SHARING AGREEMENT", va.readBenefit_Eligibility());
+
+		// verify Duration label and value
+		vpEquals("Verify label Duration is displayed", "Duration", va.readLblDuration());
+		vpEquals("Verify duration is displayed", "30", va.readDuration());
+		r.scrollBottom();
+		sleep(2);
+		va.clickBtnClose();
+		sleep(10);
+
+		r.clickBtnRightMouseContext(acp.selectTimeSlotBySeparateDateTime(tsDateBegin, tsStartTimeBegin));
+		sleep(5);
+
+		acp.clickSlotPopupScheduleAppointmentMenuItem("Edit");
+		sleep(3);
+
+		// verify Edit Appointment page title
+		vpEquals("Verify page title", "Edit Appointment", eap.readLblEditAppointment());
+
+		// verify Clinic Label
+		vpEquals("Verify Clinic Label", "Clinic", eap.readLblClinic());
+
+		// verify Clinic
+		vpEquals("Verify Clinic ", "AUTO BLACKBOX COUNT", eap.readClinic());
+
+		// verify Clinic TimeZone Label
+		vpEquals("Verify Clinic TimeZone Label ", "Clinic Timezone", eap.readLblClinicTimezone());
+
+		// verify Clinic TimeZone
+		vpEquals("Verify Clinic TimeZone", "MOUNTAIN", eap.readClinicTimezone());
+
+		// verify Clinic Appointment Type label
+		vpEquals("Verify Clinic Appointment Type label ", "Appointment Type", eap.readLblAppointmentType());
+
+		// verify Clinic Appointment Type
+		vpEquals("Verify Clinic Appointment Type", "SHARING AGREEMENT", eap.readAppointmentType());
+
+		// verify Notes label
+		vpEquals("Verify Notes label ", "Notes", eap.readLblNotes());
+
+		// verify GAF label
+		vpEquals("Verify GAF label ", "GAF", eap.readLblGAF());
+
+		// verify GAF
+		vpEquals("Verify GAF", "New GAF Required", eap.readGAF());
+
+		// verify Benefit Eligibility label
+		vpEquals("Verify Benefit Eligibility label ", "Benefit/Eligibility", eap.readLblBenefit_Eligibility());
+
+		// verify SERVICE CONNECTED 50% to 100%
+		vpEquals("Verify Benefit Eligibility", "SHARING AGREEMENT", eap.readBenefit_Eligibility());
+
+		// verify PID label
+		vpEquals("Verify PID label ", "PID", eap.readLblPID());
+
+		// verify Start Time label
+		vpEquals("Verify Start Time label ", "Start Time", eap.readLblStartTime());
+
+		// verify duration label
+		vpEquals("Verify duration label", "Duration", eap.readLblDuration());
+
+		// verify duration
+		vpEquals("Verify appointment duration", "30", eap.readDuration());
+
+		// Verify Cancel button is present
+		vpEquals("Verify Cancel button is present", true, eap.getBtnCancel().isDisplayed());
+
+		// Verify Cancel button is present
+		vpEquals("Verify Select Report button is present", true, eap.getPrintLetterParent().isDisplayed());
+
+		// Read Cancel button
+		vpEquals("Read Cancel button", "Cancel", eap.getBtnCancel().readText());
+
+		// Verify Save Changes button is present
+		vpEquals("Verify Save Changes button is present", true, eap.getBtnSaveChanges().isDisplayed());
+
+		// Verify Print button is present
+		vpEquals("Verify Print button is present", true, eap.getBtnPrint().isDisplayed());
+
+		// Read Print button is present
+		vpEquals("Read Print button", "Print", eap.getBtnPrint().readText());
+
+		// Read Cancel button
+		vpEquals("Read Save Changes button", "Save Changes", eap.getBtnSaveChanges().readText());
+
+		eap.clickBtnCancel();
+		sleep(10);
+
+		r.clickBtnRightMouseContext(acp.selectTimeSlotBySeparateDateTime(tsDateBegin, tsStartTimeBegin));
+		sleep(5);
+
+		acp.clickSlotPopupScheduleAppointmentMenuItem("Expand Entry");
+		sleep(3);
+
+		// verify Expanded Entry page title
+		vpEquals("Verify page title", "Expanded Entry", eemp.readLblExpandedEntry());
+		sleep(3);
+
+		// Click Expand All+
+		eemp.clickBtnExpandAllPlusIcon(); // Akash 07/08/2024
+
+		// verify Patient Name label.
+		vpEquals("Verify Patient Name label", "Patient Name", eemp.getLblPatientName());
+		sleep(2);
+
+		// verify Patient Name Text ("AUTO,TEST VICTOR")
+		vpEquals("Verify Patient Name Text", "TEST,AKASH", eemp.getTxtPatientName());
+		sleep(2);
+
+		// verify the Last Four of SSN Label
+		vpEquals("Verify the Last Four of SSN Label", "Last Four of SSN", eemp.getLblLastFourOfSSN());
+		sleep(2);
+
+		// verify the Last Four of SSN Text
+		vpEquals("Verify the Last Four of SSN Text", "1110", eemp.getTxtLastFourOfSSN());
+		sleep(2);
+
+		// verify the Clinic Label
+		vpEquals("Verify the Clinic Label", "Clinic", eemp.getLblClinic());
+		sleep(2);
+
+		// verify the Clinic Text
+		vpEquals("Verify the Clinic Text", "AUTO BLACKBOX COUNT", eemp.getTxtClinic());
+		sleep(2);
+
+		// verify the Date/Time Label
+		vpEquals("Verify Date/Time Label", "Date/Time", eemp.getLblDateTime());
+		sleep(2);
+
+		// verify the Status Label
+		vpEquals("Verify the Status Label ", "Status", eemp.getLblStatus());
+		sleep(2);
+
+		// verify the Status Text
+		vpEquals("Verify the Status Text ", "NO ACTION TAKEN/TODAY", eemp.getTxtStatus());
+		sleep(2);
+
+		// verify the Purpose of Visit Label
+		vpEquals("Verify the Purpose of Visit Label ", "Purpose of Visit", eemp.getLblPurposeOfVisit());
+		sleep(2);
+
+		// verify the Purpose of Visit Text ("SCHEDULED VISIT")
+		vpEquals("Verify the Purpose of Visit Text ", "SCHEDULED VISIT", eemp.getTxtPurposeOfVisit());
+		sleep(2);
+
+		// verify the Length of Appointment (mins) Label
+		vpEquals("Verify the Length of Appointment (mins) Label ", "Length of Appointment (mins)",
+				eemp.getLblLengthOfAppointment());
+		sleep(2);
+
+		// verify the Length of Appointment (mins) ("30")
+		vpEquals("Verify the Length of Appointment (mins) text ", "30", eemp.getTxtLengthOfAppointment());
+		sleep(2);
+
+		// verify the Appointment Type Label
+		vpEquals("Verify the Appointment Type Label ", "Appointment Type", eemp.getLblAppointmentType());
+		sleep(2);
+
+		// verify the Appointment Type Text ("SERVICE CONNECTED")
+		vpEquals("Verify the Appointment Type Text ", "SHARING AGREEMENT", eemp.getTxtAppointmentType());
+		sleep(2);
+
+		// verify the Lab Label
+		vpEquals("Verify the Lab Label ", "Lab", eemp.getLblLab());
+		sleep(2);
+
+		// verify the Eligibility of Appointment Label
+		vpEquals("Verify the Eligibility of Appointment Label ", "Eligibility of Appointment",
+				eemp.getLblEligibilityOfAppointment());
+
+		sleep(2);
+
+		// verify the Eligibility of Appointment text ("SERVICE CONNECTED 50% to 100%")
+		vpEquals("Verify the Eligibility of Appointment text ", "SHARING AGREEMENT",
+				eemp.getTxtEligibilityOfAppointment());
+		sleep(2);
+
+		// Click Close button
+		eemp.clickBtnClose();
+		sleep(10);
+
+		r.clickBtnRightMouseContext(acp.selectTimeSlotBySeparateDateTime(tsDateBegin, tsStartTimeBegin));
+		sleep(5);
+
+		acp.clickSlotPopupScheduleAppointmentMenuItem("Check In Patient");
+		sleep(5);
+
+		ciap.clickBtnAppointmentCheckIn();
+		sleep(10);
+
+		r.clickBtnRightMouseContext(acp.selectTimeSlotBySeparateDateTime(tsDateBegin, tsStartTimeBegin));
+		sleep(5);
+
+		// Verify Appointment Slot Color
+		vpEquals("Verify Appointment Slot Color", "Check In", acp.readToolTipSlotAppointmentStatus());
+
+		acp.clickSlotPopupScheduleAppointmentMenuItem("Undo Check In Patient");
+		sleep(10);
+
+		r.clickBtnRightMouseContext(acp.selectTimeSlotBySeparateDateTime(tsDateBegin, tsStartTimeBegin));
+		sleep(5);
+
+		// Verify Appointment Slot Color
+		vpEquals("Verify Appointment Slot Color", "New", acp.readToolTipSlotAppointmentStatus());
+
+		acp.clickSlotPopupScheduleAppointmentMenuItem("Cancel");
+		sleep(10);
+
+		// click the Cancelled By Clinic button
+		cap.clickBtnCancelledByClinic();
+		sleep(3);
+
+		if (cap.getBtnCancelledByClinic().isSelected()) {
+			addNote("Cancelled By Clinic has been selected");
+		}
+		cap.setReasonForCancellationInput("CLINIC CANCELLED");
+
+		cap.selectReasonForCancellationByName("CLINIC CANCELLED");
+
+		// verify cancellation reason Other has been selected
+		vpEquals("verify cancellation reason Other has been selected", "CLINIC CANCELLED",
+				cap.readDdlReasonForCancellationSelected());
+
+		// sleep statement
+		sleep(2);
+
+		// clicking Cancel Appointment button
+		cap.clickBtnCancelAppointment();
+
+		// sleep statement
+		sleep(5);
+		// Appointment Successfully Cancelled pop up window
+
+		// verify Appointment Successfully Cancelled pop up window is displayed
+
+		vpEquals("Verify Appointment Successfully Cancelled pop up window is displayed",
+				"Appointment Successfully Cancelled", cap.readLblAppointmentSuccessfullyCancelled());
+		// sleep statement
+		sleep(5);
+
+		// verify close button is displaying
+
+		vpEquals("Verify close button is displaying", "Close", cap.readLblClose());
+
+		// click on close button from Appointment Successfully Cancelled pop up window
+		cap.clickBtnClose();
+		sleep(5);
+		// click on the Patient button
+
+		hmp.clickBtnPatient();
+		sleep(10);
+
+		// Click Appointment Requests Reset Filter Button
+		pp.clickBtnAppointmentRequestsResetFilters();
+		sleep(5);
+		// clicking on the action option from the comment section
+		pp.clickAppointmentRequestsColumnHeaderActionsMenu("REQUEST");
+		sleep(3);
+
+		pp.clickLstAppointmentRequestsHeaderActionMenuItem("Filter by REQUEST");
+		sleep(3);
+
+		String filtered = r.getFilterType("REQUEST");
+
+		// sending data from CSV file
+		pp.setAppointmentRequestsColumnHeaderFilterInput("REQUEST", filtered, "Procedure");
+		sleep(10);
+		// Press escape key
+		r.pressEscapeKey();
+		sleep(5);
+		pp.clickAppointmentRequestsActionsRowWithColumnValue("Procedure");
+		sleep(5);
+		pp.clickLstAppointmentRequestsActionsMenuItem("Appointment", "New");
+		sleep(5);
+
+		acp.setSearchClinicInput("AUTO BLACKBOX COUNT");
+		sleep(3);
+
+		acp.selectClinicByName("AUTO BLACKBOX COUNT");
+		sleep(10);
+		String tsDateBeginCalender = "tomorrow";
+		String tsStartTimeBeginCalendar = "08:00 AM";
+
+		if (tsDateBeginCalender.equalsIgnoreCase("tomorrow")) {
+			tsDateBeginCalender = r.readCurrentDate("M/d/yyyy");
+			System.out.println(tsDateBeginCalender);
+		}
+		r.scrollIntoView(acp.selectTimeSlotBySeparateDateTime(tsDateBeginCalender, tsStartTimeBeginCalendar));
+
+		r.clickBtnRightMouseContext(acp.selectScheduleDateTimeSlotCount(tsDateBeginCalender, tsStartTimeBeginCalendar));
+		sleep(5);
+
+		acp.clickSlotPopupScheduleAppointmentMenuItem("Create Appointment");
+		sleep(5);
+		ctcmp.clickBtnLblBtnClinicStopModalYes();
+		sleep(3);
+		maemp.clickCloseIcon();
+		sleep(3);
+		nap.selectBenefitEligibility("SHARING AGREEMENT");
+		sleep(5);
+
+		nap.clickBtnCreateAppointment();
+
+		pplmp.clickBtnPreviewPatientLetterCancelIcon();
+		sleep(5);
+
+		hmp.clickBtnHome();
+		sleep(3);
+
+		hp.clickTabClinic();
+		sleep(3);
+
+		hp.setSearchClinicInput("AUTO BLACKBOX COUNT");
+		sleep(3);
+		hp.selectClinicByName("AUTO BLACKBOX COUNT");
+		sleep(10);
+
+		r.clickBtnLeftMouseAfterMove(
+				acp.selectTimeSlotBySeparateDateTime(tsDateBeginCalender, tsStartTimeBeginCalendar));
+		sleep(5);
+
+		acp.getTimeSlotViewerAppointment(tsDateBeginCalender);
+		sleep(5);
+
+		r.clickBtnRightMouseContext(
+				acp.selectTimeSlotViewerAppointmentBySeparateDateTime(tsDateBeginCalender, tsStartTimeBeginCalendar));
+		sleep(5);
+
+		// Verifying menu in Time slot viewer Appointment Calendar Page
+
+		// Verify Edit Label is displayed
+		vpEquals("Edit Label is displayed", "Edit", acp.readLblEdit());
+		sleep(2);
+		// Verify View View is displayed
+		vpEquals("View Label is displayed", "View", acp.readLblView());
+		sleep(2);
+
+		// Verify Cancel Label is displayed
+		vpEquals("Cancel Label is displayed", "Cancel", acp.readLblCancel());
+		sleep(2);
+		// Verify Block and Move Label is displayed
+		vpEquals("Block and Move Label is displayed", "Block and Move", acp.readLblBlockAndMove());
+		sleep(2);
+		// Verify Check In Patient Label is displayed
+		vpEquals("Check In Patient Label is displayed", "Check In Patient", acp.readLblCheckInPatient());
+		sleep(2);
+
+		// Verify Mark as No Show Label is displayed
+		vpEquals("Mark as No Show Label is displayed", "Mark as No Show", acp.readLblMarkNoShow());
+		sleep(2);
+
+		// Verify Expand Entry is displayed
+		vpEquals("Expand Entry Label is displayed", "Expand Entry", acp.readLblExpandEntry());
+		sleep(3);
+
+		acp.clickSlotPopupScheduleAppointmentMenuItem("Cancel");
+		sleep(3);
+
+		vpEquals("Verify user is on cancel appointment page", "Cancel Appointment", r.readCurrentPageTitle());
+		// click the Cancelled By Clinic button
+		cap.clickBtnCancelledByClinic();
+
+		if (cap.getBtnCancelledByClinic().isSelected()) {
+			addNote("Cancelled By Clinic has been selected");
+		}
+
+		// passing input data in text field for Reason For Cancellation
+		cap.setReasonForCancellationInput("CLINIC CANCELLED");
+
+		// selecting reason for cancellation
+		cap.selectReasonForCancellationByName("CLINIC CANCELLED");
+
+		// verify cancellation reason Other has been selected
+		vpEquals("verify cancellation reason CLINIC CANCELLED has been selected", "CLINIC CANCELLED",
+				cap.readDdlReasonForCancellationSelected());
+
+		// sleep statement
+		sleep(2);
+
+		// clicking Cancel Appointment button
+		cap.clickBtnCancelAppointment();
+
+		cap.clickBtnClose();
+		sleep(5);
+
+		// click on the Patient button
+		hmp.clickBtnPatient();
+		sleep(10);
+
+		// Creating appointment in Non-Count Clinic
+
+		pp.clickAppointmentRequestsActionsRowWithColumnValue("Procedure");
+		sleep(3);
+		pp.clickLstAppointmentRequestsActionsMenuItem("Appointment", "New");
+		sleep(5);
+
+		acp.setSearchClinicInput("AUTO BLACKBOX NON-COUNT");
+		sleep(3);
+
+		acp.selectClinicByName("AUTO BLACKBOX NON-COUNT");
+		sleep(10);
+		String tsDateBeginCalenderNonCount = "tomorrow";
+		String tsStartTimeBeginCalendarNonCount = "08:00 AM";
+
+		if (tsDateBeginCalenderNonCount.equalsIgnoreCase("tomorrow")) {
+			tsDateBeginCalenderNonCount = r.readCurrentDate("M/d/yyyy");
+			System.out.println(tsDateBeginCalenderNonCount);
+		}
+		r.scrollIntoView(
+				acp.selectTimeSlotBySeparateDateTime(tsDateBeginCalenderNonCount, tsStartTimeBeginCalendarNonCount));
+
+		r.clickBtnRightMouseContext(
+				acp.selectScheduleDateTimeSlotCount(tsDateBeginCalenderNonCount, tsStartTimeBeginCalendarNonCount));
+		sleep(5);
+
+		acp.clickSlotPopupScheduleAppointmentMenuItem("Create Appointment");
+		sleep(5);
+		ctcmp.clickBtnLblBtnClinicStopModalYes();
+		sleep(5);
+		maemp.clickCloseIcon();
+		sleep(3);
+		nap.selectBenefitEligibility("SHARING AGREEMENT");
+
+		nap.clickBtnCreateAppointment();
+
+		pplmp.clickBtnPreviewPatientLetterCancelIcon();
+		sleep(5);
+
+		pp.clickBtnPendingAppointmentsResetFilters();
+		sleep(3);
+
+		pp.setPendingAppointmentsMultipleColumnHeaderFilters("CLINIC:" + "AUTO BLACKBOX NON-COUNT");
+		sleep(3);
+
+		// Selecting first row in pending appointments table
+		pp.clickPendingAppointmentsActionsRowZero();
+		sleep(3);
+
+		// Verify Edit Label is displayed
+		vpEquals("Edit Label is displayed", "Edit", patp.readPendingLblEdit());
+		sleep(2);
+		// Verify View View is displayed
+		vpEquals("View Label is displayed", "View", patp.readPendingLblView());
+		sleep(2);
+
+		// Verify Cancel Label is displayed
+		vpEquals("Cancel Label is displayed", "Cancel", patp.readPendingLblCancel());
+		sleep(2);
+		// Verify Block and Move Label is displayed
+		vpEquals("Block and Move Label is displayed", "Block and Move", patp.readPendingLblBlockAndMove());
+		sleep(2);
+		// Verify Check In Patient Label is displayed
+		vpEquals("Check In Patient Label is displayed", "Check In Patient", patp.readPendingLblCheckInPatient());
+		sleep(2);
+
+		// Verify Mark as No Show Label is displayed
+		vpEquals("Mark as No Show Label is displayed", "Mark as No Show", patp.readPendingLblMarkNoShow());
+		sleep(2);
+
+		// Verify Expand Entry is displayed
+		vpEquals("Expand Entry Label is displayed", "Expand Entry", patp.readPendingLblExpandEntry());
+		sleep(3);
+
+		String cancelProcedure = "Cancel";
+		pp.clickLstPendingAppointmentsActionsMenuItem(cancelProcedure);
+		sleep(5);
+
+		// passing input data in text field for Reason For Cancellation
+		cap.setReasonForCancellationInput("OTHER");
+		sleep(3);
+		// selecting reason for cancellation
+		cap.selectReasonForCancellationByName("OTHER");
+		// clicking Cancel Appointment button
+		cap.clickBtnCancelAppointment();
+		// sleep statement
+		sleep(3);
+
+		// click on close button from Appointment Successfully Cancelled pop up window
+		cap.clickBtnClose();
+		sleep(10);
+
+		// Procedure appointment is sent back to the procedure request table
+		pp.clickAppointmentRequestsActionsRowWithColumnValue("Procedure");
+		sleep(3);
+		pp.clickLstAppointmentRequestsActionsMenuItem("Appointment", "New");
+		sleep(5);
+
+		acp.setSearchClinicInput("AUTO BLACKBOX COUNT");
+		sleep(3);
+
+		acp.selectClinicByName("AUTO BLACKBOX COUNT");
+		sleep(10);
+		String tsDateBeginCalenderOverbook = "tomorrow";
+		String tsStartTimeBeginCalendarOverbook = "11:45 AM";
+
+		if (tsDateBeginCalenderOverbook.equalsIgnoreCase("tomorrow")) {
+			tsDateBeginCalenderOverbook = r.readCurrentDate("M/d/yyyy");
+			System.out.println(tsDateBeginCalenderOverbook);
+		}
+		r.scrollIntoView(
+				acp.selectTimeSlotBySeparateDateTime(tsDateBeginCalenderOverbook, tsStartTimeBeginCalendarOverbook));
+
+		r.clickBtnRightMouseContext(
+				acp.selectScheduleDateTimeSlotCount(tsDateBeginCalenderNonCount, tsStartTimeBeginCalendarOverbook));
+		sleep(10);
+
+		acp.clickSlotPopupScheduleAppointmentMenuItem("Create Appointment (Overbooked)");
+		sleep(5);
+
+		obmp.clickBtnOverbookConfirm();
+		sleep(3);
+		ctcmp.clickBtnLblBtnClinicStopModalYes();
+		sleep(5);
+		maemp.clickCloseIcon();
+		sleep(3);
+		nap.selectBenefitEligibility("SHARING AGREEMENT");
+
+		nap.clickBtnCreateAppointment();
+		sleep(3);
+		pplmp.clickBtnPreviewPatientLetterCancelIcon();
+		sleep(5);
+
+		hmp.clickBtnHome();
+		sleep(3);
+
+		// click on the Patient button
+		hmp.clickBtnPatient();
+		sleep(10);
+
+		// Creating Overbook Appointment in green time slot
+		pp.clickAppointmentRequestsActionsRowWithColumnValue("Procedure");
+		sleep(3);
+		pp.clickLstAppointmentRequestsActionsMenuItem("Appointment", "New");
+		sleep(5);
+
+		acp.setSearchClinicInput("AUTO BLACKBOX COUNT");
+		sleep(3);
+
+		acp.selectClinicByName("AUTO BLACKBOX COUNT");
+		sleep(10);
+		String tsDateBeginCalenderOverbookTimeSlot = "tomorrow";
+		String tsStartTimeBeginCalendarOverbookTimeslot = "4:00 PM";
+
+		if (tsDateBeginCalenderOverbookTimeSlot.equalsIgnoreCase("tomorrow")) {
+			tsDateBeginCalenderOverbookTimeSlot = r.readCurrentDate("M/d/yyyy");
+			System.out.println(tsDateBeginCalenderOverbookTimeSlot);
+		}
+		r.scrollIntoView(acp.selectTimeSlotBySeparateDateTime(tsDateBeginCalenderOverbookTimeSlot,
+				tsStartTimeBeginCalendarOverbookTimeslot));
+
+		r.clickBtnRightMouseContext(acp.selectScheduleDateTimeSlotCount(tsDateBeginCalenderOverbookTimeSlot,
+				tsStartTimeBeginCalendarOverbookTimeslot));
+		sleep(10);
+
+		acp.clickSlotPopupScheduleAppointmentMenuItem("Create Appointment (Overbooked)");
+		sleep(10);
+
+		obmp.clickBtnOverbookConfirm();
+		sleep(5);
+		ctcmp.clickBtnLblBtnClinicStopModalYes();
+		sleep(5);
+		// maemp.clickCloseIcon();
+		sleep(3);
+		nap.selectBenefitEligibility("SHARING AGREEMENT");
+		sleep(3);
+
+		nap.clickBtnCreateAppointment();
+		sleep(3);
+
+		pplmp.clickBtnPreviewPatientLetterCancelIcon();
+		sleep(5);
+
+		hmp.clickBtnHome();
+		sleep(3);
+
+	}
+
+}
